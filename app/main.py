@@ -134,5 +134,6 @@ def remove_sensor(name):
 def logout():
     session.pop('username', None)
     session.pop('password', None)
+    flash('Logged out successfully')
     return redirect(url_for('login'))
 
