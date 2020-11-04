@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+<style type="text/css">
+
+.rectangle{
+		position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%, -50%);
+        overflow: auto;
+        width: 100%;
+		background-color: #ffffff;
+
+		height:450px;
+
+		border-radius: 8px;
+	}
+@keyframes example {
+  40%   {background-color: violet;}
+  50%  {background-color: indigo;}
+  60%  {background-color: blue;}
+  70%  {background-color: green;}
+  80%  {background-color: yellow;}
+  90%  {background-color: orange;}
+  100% {background-color: red;}
+}
+</style>
+{% endblock %}
+{% block content %}
+<body style="background-image: url(https://github.com/Prasanna-Natarajan-3595/Simply_con/blob/main/icons/Brick-wallaper-For-Background-19.jpg?raw=true)">
+
+
+
+
+<!-- Image and text -->
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="/logout">
+    <img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/icons/ethernet.ico" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    Simply-con
+  </a>
+  {% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+                    <p>{{ message }}</p>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+</nav>
+
+
+
+  <div class="w3-col m4 l3">
+  	<div class="w3-colxs">
+  <div class="rectangle" style="max-width: 901px;">
+<div> <h3 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">Timings</h3>
+  <div style="padding-left: 90%;">
+    <form action="/me/timing/add">
+    
+    <input type="submit" value="Add" class="btn btn-outline-dark" >
+  </form>
+  </div>
+<hr> </div>
+{% for i in content %}
+    <div style="padding-left: 10px;">
+      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}}</h4><form action="/me/timing/{{i[0]}}">
+        <input type="submit" class="btn btn-outline-danger" style="float: right;" value="Delete">
+    </form>
+      <br>
+        <hr>
+    </div>
+    {% endfor %}
+</div>
+      
+      <div style="padding-top:800px;"></div>
+      <div style="position: absolute;
+      left: 50%;
+
+        transform: translate(-50%, -50%);
+        width: 100%;
+		background-color: #ffffff;
+		height:450px;
+		overflow: auto;
+		border-radius: 8px;
+		max-width: 901px;">
+<div> <h3 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">Sensors</h3>
+  <div style="padding-left: 90%;">
+    <form action="/me/sensor/add">
+
+    <input type="submit" value="Add" class="btn btn-outline-dark" >
+  </form>
+  </div>
+<hr> </div>
+{% for i in content_2 %}
+    <div style="padding-left: 10px;">
+      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}}: {{i[4]}}</h4><form action="/me/sensor/{{i[0]}}">
+        <input type="submit" class="btn btn-outline-danger" style="float: right;" value="Delete">
+    </form>
+      <br>
+        <hr>
+    </div>
+    {% endfor %}
+  </div>
+  </div>
+
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+

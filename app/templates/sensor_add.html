@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<style type="text/css">
+.rectangle{
+		position: absolute;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%, -50%);
+        height: 500px;
+        width: 100%;
+		background-color: #ffffff;
+
+		border-radius: 8px;
+	}
+@keyframes example {
+  40%   {background-color: violet;}
+  50%  {background-color: indigo;}
+  60%  {background-color: blue;}
+  70%  {background-color: green;}
+  80%  {background-color: yellow;}
+  90%  {background-color: orange;}
+  100% {background-color: red;}
+}
+</style>
+{% endblock %}
+{% block content %}
+<!-- Image and text -->
+<body>
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="/logout">
+    <img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/icons/ethernet.ico" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    Simply-con
+  </a>
+</nav>
+<img src="https://github.com/Prasanna-Natarajan-3595/Simply_con/blob/main/icons/Brick-wallaper-For-Background-19.jpg?raw=true">
+  <div class="w3-col m4 l3">
+  	<div class="w3-colxs">
+  <div class="rectangle" style="max-width: 901px;">
+  	<div style="padding-top: 60px;"></div>
+  	<div>
+      <center>
+        		<font style="font-family: 'Segoe UI'; font-size: 19px;">
+  			<h4 style="font-family: 'Segoe UI';">Enter detail </h4><br>
+        Enter host,value,time<br><br>
+        <form action="/me/sensor/add/process" method="POST">
+          <input type="text" name="host" class="form-control" placeholder="host">
+          <br>
+            <input type="text" name="send" class="form-control" placeholder="send">
+          <br>
+            <input type="text" name="value" class="form-control" placeholder="value">
+            <br>
+            <input type="text" name="alt_value" class="form-control" placeholder="alternate-value">
+            <br>
+          <input type="submit" value="Add" class="btn btn-outline-dark" style="width: 200px;"></form>
+          <br>
+
+  		</font>
+    </center>
+  	</div>
+  </div>
+  </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+
