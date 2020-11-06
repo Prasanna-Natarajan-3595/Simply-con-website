@@ -1,12 +1,14 @@
 # To run FLASK_APP=web_app/main.py flask run
 from flask import Flask, render_template, session, request, redirect, url_for, flash
 import psycopg2
+import os
 
 # Initializing all
 app = Flask(__name__)
 app.secret_key = 'aiohfoi83768403289fh;fh;df'
-con = psycopg2.connect(database='simplycon', user='postgres',
-                       password='2005', host='localhost')
+
+con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"),
+                       password=os.getenv("PASSWORD"), host=os.getenv("HOST"))
 cur = con.cursor()
 cur2 = con.cursor()
 
