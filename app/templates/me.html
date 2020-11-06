@@ -8,7 +8,7 @@
 .rectangle{
 		position: absolute;
         left: 50%;
-        top: 70%;
+        top: 90%;
         transform: translate(-50%, -50%);
         overflow: auto;
         width: 100%;
@@ -49,13 +49,20 @@
       <li class="nav-item active">
         <a class="nav-link" href="/me">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link" href="/help">Help</a>
       </li>
-      <li class="nav-item">
+        <li class="nav-item active">
+        <a class="nav-link" href="/me/profile">Profile</a>
+      </li>
+      <li class="nav-item active">
         <a class="nav-link" href="/logout">Logout</a>
       </li>
+
     </ul>
+      <span class="navbar-text">
+      Welcome {{name}}
+    </span>
   </div>
 </nav>
 
@@ -81,11 +88,13 @@
       <br>
         <hr>
     </div>
+    {% else %}
+          <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">Start adding a time value by hitting add</h4>
     {% endif %}
-    {% endfor %}
+{% endfor %}
 </div>
       
-      <div style="padding-top:1000px;"></div>
+      <div style="padding-top:1100px;"></div>
       <div style="position: absolute;
       left: 50%;
 
@@ -105,14 +114,19 @@
   </div>
 <hr> </div>
 {% for i in content_2 %}
-        {% if i is not none %}
+        {% if i is defined %}
+
     <div style="padding-left: 10px;">
-      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}}</h4><form action="/me/sensor/{{i[0]}}-{{i[1]}}-{{i[2]}}">
+      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}} : {{i[4]}}</h4><form action="/me/sensor/{{i[0]}}">
         <input type="submit" class="btn btn-outline-danger" style="float: right;" value="Delete">
     </form>
       <br>
         <hr>
     </div>
+          {% else %}
+          <div>
+          <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">Start adding a sensor value by hitting add</h4>
+          </div>
         {% endif %}
     {% endfor %}
   </div>

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<style type="text/css">
+.rectangle{
+		position: absolute;
+        left: 50%;
+        top: 65%;
+        transform: translate(-50%, -50%);
+        height:auto;
+        min-height: 530px;
+        width: 100%;
+		background-color: #ffffff;
+
+		border-radius: 8px;
+	}
+@keyframes example {
+  40%   {background-color: violet;}
+  50%  {background-color: indigo;}
+  60%  {background-color: blue;}
+  70%  {background-color: green;}
+  80%  {background-color: yellow;}
+  90%  {background-color: orange;}
+  100% {background-color: red;}
+}
+</style>
+{% endblock %}
+{% block content %}
+<!-- Image and text -->
+<body>
+<nav class="navbar navbar-light bg-light">
+
+</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">
+    <img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/ethernet.ico" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    Simply-con
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/me">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/help">Help</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/me/profile">Profile</a>
+      </li>
+        <li class="nav-item active">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/Brick-wallaper-For-Background-19.jpg">
+  <div class="w3-col m4 l3">
+  	<div class="w3-colxs">
+  <div class="rectangle" style="max-width: 901px;">
+  	<div style="padding-top: 60px;"></div>
+  	<div>
+      <center>
+        		<font style="font-family: 'Segoe UI'; font-size: 19px;">
+  			<h4 style="font-family: 'Segoe UI';">Your Profile </h4><br>
+        Name | email | password<br><br>
+        <form action="/me/profile/save" method="POST">
+          <input type="text" name="name" class="form-control" placeholder="name" value="{{name}}">
+          <br>
+            <p>{{email}}</p>
+          <br>
+            <input type="text" name="password" class="form-control" placeholder="password" value="{{password}}">
+            <br>
+            <br>
+          <input type="submit" value="Save" class="btn btn-outline-dark" style="width: 200px;"></form>
+                    <br>
+                    <a href="/delete">
+                        <button class="btn btn-outline-danger" style="width: 200px;">Delete account</button>
+                    </a>
+          {% with messages = get_flashed_messages() %}
+         {% if messages %}
+               {% for message in messages %}
+                    <p>{{ message }}</p>
+               {% endfor %}
+         {% endif %}
+      {% endwith %}
+  		</font>
+    </center>
+  	</div>
+  </div>
+  </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+{% endblock %}
+
