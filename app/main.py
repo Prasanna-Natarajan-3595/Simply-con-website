@@ -87,7 +87,6 @@ def add():
         return redirect(url_for('login'))
 
 
-
 # timing add process page
 @app.route('/me/timing/add/process', methods=['POST', 'GET'])
 def process():
@@ -98,9 +97,42 @@ def process():
             thing2 = [item[1] for item in thing]
             try:
                 if session['username'] in thing2:
-                    cur.execute(f"""UPDATE data SET timing = array_append(timing, '['{request.form['host']}','{request.form['value']}','{request.form['time']}']'""")
-                    con.commit()
-                    return redirect(url_for('me'))
+                    if thing[thing2.index(session['username'])][2] == session['password']:
+                        cur.execute(f"""
+                        SELECT timing
+                        FROM data
+                        WHERE email='{session['username']}'
+                        AND password='{session['password']}';
+                        """)
+                        val = cur.fetchall()
+                        if request.method == 'POST':
+                            if val == None:
+                                cur.execute(f"""
+                                update data 
+                                set timing = ARRAY[ [{request.form['host'],request.form['value'],request.form['time']}] ]
+                                where email='{session['usename']}';""")
+                                con.commit()
+                                return redirect(url_for('me'))
+                            else:
+                                cur.execute(f"""
+                                                        SELECT timing
+                                                        FROM data
+                                                        WHERE email='{session['username']}'
+                                                        AND password='{session['password']}';
+                                                        """)
+                                val = cur.fetchall()
+                                for i in val:
+                                    for e in i:
+
+
+                        else:
+                            flash('You need to be logged in')
+                            return redirect(url_for('login'))
+
+                    else:
+                        flash('Wrong details')
+                        return redirect(url_for('login'))
+
             except Exception as e:
                 con.rollback()
                 flash(f'An error occured {e}')

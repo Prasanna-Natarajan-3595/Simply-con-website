@@ -6,10 +6,10 @@
 .rectangle{
 		position: absolute;
         left: 50%;
-        top: 55%;
+        top: 65%;
         transform: translate(-50%, -50%);
         height:auto;
-        min-height: 450px;
+        min-height: 530px;
         width: 100%;
 		background-color: #ffffff;
 
@@ -59,6 +59,8 @@
             <br>
             <br>
           <input type="submit" value="Login in" class="btn btn-outline-dark" style="width: 200px;"></form>
+                    <br>
+                    <a href="/signup"><button class="btn btn-outline-danger" style="width: 200px;">SignUp</button></a>
           <br>
           {% with messages = get_flashed_messages() %}
          {% if messages %}
