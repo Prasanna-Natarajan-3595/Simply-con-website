@@ -12,9 +12,14 @@ cur2 = con.cursor()
 
 
 # login page
-@app.route('/')
+@app.route('/login')
 def login():
     return render_template('login.html')
+
+
+@app.route('/')
+def loginsignup():
+    return render_template('login_signup.html')
 
 
 # Home page
@@ -23,33 +28,48 @@ def me():
     if not 'username' in session and not 'password' in session:
         session['username'] = request.form['username']
         session['password'] = request.form['password']
-        cur.execute('SELECT id, email, password, timing, sensor FROM data ORDER BY id')
+        cur.execute('SELECT id,email,password,name,timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send  FROM data ORDER BY id')
         try:
             thing = [item for item in cur.fetchall()]
             thing2 = [item[1] for item in thing]
             if session['username'] in thing2:
-
                 if thing[thing2.index(session['username'])][2] == session['password']:
                     cur.execute(f"""
-                    SELECT timing,sensor
+                    SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
                     FROM data
                     WHERE email='{session['username']}'
                     AND password='{session['password']}';
                     """)
                     val = cur.fetchall()
-                    val2 = [item[0] for item in val]
-                    val3 = [item[0] for item in val]
-                    return render_template('me.html', content=val2, content_2=val3)
+                    arra = []
+                    try:
+                        val14 = val[4]
+                        val24 = val[5]
+                        val44 = val[6]
+                        for no, i in enumerate(val[3]):
+                            arra.append([i, val14[no], val24[no], val44[no]])
+                        content_2 = arra[0]
+                    except:
+                        content_2 = []
+                    try:
+                        arras = []
+                        val1 = val[1]
+                        val2 = val[2]
+                        for no, i in enumerate(val[0]):
+                            arra.append([i, val1[no], val2[no]])
+                        content = arras[0]
+                    except:
+                        content = []
+                    return render_template('me.html', content=content, content_2=content_2)
                 else:
                     flash('Wrong details')
-                    return redirect(url_for('login'))
+                    return redirect(url_for('loginsignup'))
             else:
                 flash('No users better signup')
                 return redirect(url_for('signup'))
         except Exception as e:
             flash(f'An error occured {e}')
             return redirect(url_for('login'))
-
     else:
         session.pop('username', None)
         session.pop('password', None)
@@ -61,24 +81,17 @@ def me():
 @app.route('/me/timing/add')
 def add():
     try:
-        cur.execute('SELECT id, email, password, timing, sensor FROM data ORDER BY id')
+        cur.execute(
+            'SELECT id, email, password, timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send FROM data ORDER BY id')
         thing = [item for item in cur.fetchall()]
         thing2 = [item[1] for item in thing]
         if session['username'] in thing2:
 
             if thing[thing2.index(session['username'])][2] == session['password']:
-                cur.execute(f"""
-                SELECT timing,sensor
-                FROM data
-                WHERE email='{session['username']}'
-                AND password='{session['password']}';
-                """)
-                val = cur.fetchall()
-
                 return render_template('add.html')
             else:
                 flash('Wrong details')
-                return redirect(url_for('login'))
+                return redirect(url_for('loginsignup'))
         else:
             flash('No users better signup')
             return redirect(url_for('signup'))
@@ -99,7 +112,7 @@ def process():
                 if session['username'] in thing2:
                     if thing[thing2.index(session['username'])][2] == session['password']:
                         cur.execute(f"""
-                        SELECT timing
+                        SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
                         FROM data
                         WHERE email='{session['username']}'
                         AND password='{session['password']}';
@@ -109,29 +122,43 @@ def process():
                             if val == None:
                                 cur.execute(f"""
                                 update data 
-                                set timing = ARRAY[ [{request.form['host'],request.form['value'],request.form['time']}] ]
-                                where email='{session['usename']}';""")
+                                set timing_host = ARRAY[ '{request.form['host']}' ],
+                                timing_value = ARRAY[ '{request.form['value']}' ],
+                                timing_time = ARRAY[ '{request.form['time']}' ],
+                                where email='{session['username']}';""")
                                 con.commit()
                                 return redirect(url_for('me'))
                             else:
-                                cur.execute(f"""
-                                                        SELECT timing
-                                                        FROM data
-                                                        WHERE email='{session['username']}'
-                                                        AND password='{session['password']}';
-                                                        """)
-                                val = cur.fetchall()
-                                for i in val:
-                                    for e in i:
+                                time_host = []
+                                time_value = []
+                                time_time = []
+                                for i in val[0]:
+                                    time_host.append(i)
+                                for i in val[1]:
+                                    time_value.append(i)
+                                for i in val[2]:
+                                    time_time.append(i)
+                                time_host.append(request.form['host'])
+                                time_value.append(request.form['value'])
+                                time_time.append(request.form['time'])
+
+                                cur.execute(f"""update data
+                                                set timing_host = ARRAY {time_host},
+                                                timing_value = ARRAY {time_host},
+                                                timing_time = ARRAY {time_host}
+                                                where email='{session['username']}';""")
+                                con.commit()
+                                return redirect(url_for('me'))
+
 
 
                         else:
                             flash('You need to be logged in')
-                            return redirect(url_for('login'))
+                            return redirect(url_for('loginsignup'))
 
                     else:
                         flash('Wrong details')
-                        return redirect(url_for('login'))
+                        return redirect(url_for('loginsignup'))
 
             except Exception as e:
                 con.rollback()
@@ -143,7 +170,6 @@ def process():
     else:
         flash('No users better signup')
         return redirect(url_for('signup'))
-
 
 
 # timing delete page
@@ -193,10 +219,10 @@ def sensor_process():
                 return redirect(url_for('me'))
         else:
             flash('First you need to be logged in')
-            return redirect(url_for('login'))
+            return redirect(url_for('loginsignup'))
     else:
         flash('First you need to be logged in')
-        return redirect(url_for('login'))
+        return redirect(url_for('loginsignup'))
 
 
 # Sensor delete page
@@ -217,7 +243,7 @@ def logout():
     session.pop('username', None)
     session.pop('password', None)
     flash('Logged out successfully')
-    return redirect(url_for('login'))
+    return redirect(url_for('loginsignup'))
 
 
 # Signup page
@@ -232,13 +258,12 @@ def signup_process():
     try:
         if request.method == 'POST':
             try:
-                cur.execute('SELECT id, email, password, timing, sensor FROM data ORDER BY id')
+                cur.execute('SELECT id, email, password FROM data ORDER BY id')
                 if request.form['username'] in [item[1] for item in cur.fetchall()]:
                     flash('User already exist better login in')
                     return redirect(url_for('login'))
                 else:
-                    cur.execute(
-                        f"INSERT INTO data(email,password) VALUES('{request.form['username']}','{request.form['password']}')")
+                    cur.execute(f"INSERT INTO data(name,email,password) VALUES('{request.form['name']}','{request.form['username']}','{request.form['password']}')")
                     con.commit()
                     flash('Login again')
                     return redirect(url_for('login'))

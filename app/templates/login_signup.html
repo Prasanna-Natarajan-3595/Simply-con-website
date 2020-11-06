@@ -6,10 +6,10 @@
 .rectangle{
 		position: absolute;
         left: 50%;
-        top: 55%;
+        top: 65%;
         transform: translate(-50%, -50%);
         height:auto;
-        min-height: 450px;
+        min-height: 530px;
         width: 100%;
 		background-color: #ffffff;
 
@@ -30,10 +30,17 @@
 <!-- Image and text -->
 <body>
 <nav class="navbar navbar-light bg-light">
+
+</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/">
     <img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/ethernet.ico" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
     Simply-con
   </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
 </nav>
 <img src="https://raw.githubusercontent.com/Prasanna-Natarajan-3595/Simply_con/main/Brick-wallaper-For-Background-19.jpg">
   <div class="w3-col m4 l3">
@@ -43,17 +50,17 @@
   	<div>
       <center>
         		<font style="font-family: 'Segoe UI'; font-size: 19px;">
-  			<h4 style="font-family: 'Segoe UI';">Sign Up </h4><br>
+  			<h4 style="font-family: 'Segoe UI';">Login </h4><br>
         Enter your email and password<br><br>
-        <form action="/signup/process" method="POST">
-            <input type="text" name="name" class="form-control" placeholder="name">
-          <br>
+        <form action="/me" method="POST">
           <input type="email" name="username" class="form-control" placeholder="email">
           <br>
             <input type="password" name="password" class="form-control" placeholder="password">
             <br>
             <br>
-          <input type="submit" value="SignUp" class="btn btn-outline-dark" style="width: 200px;"></form>
+          <input type="submit" value="Login in" class="btn btn-outline-dark" style="width: 200px;"></form>
+                    <br>
+                    <a href="/signup"><button class="btn btn-outline-danger" style="width: 200px;">SignUp</button></a>
           <br>
           {% with messages = get_flashed_messages() %}
          {% if messages %}
