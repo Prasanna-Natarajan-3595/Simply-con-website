@@ -28,39 +28,27 @@ def me():
     if not 'username' in session and not 'password' in session:
         session['username'] = request.form['username']
         session['password'] = request.form['password']
-        cur.execute('SELECT id,email,password,name,timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send  FROM data ORDER BY id')
+        cur.execute("""SELECT id,name,email,password,timing_host,
+                    timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send  FROM data ORDER BY id""")
         try:
             thing = [item for item in cur.fetchall()]
-            thing2 = [item[1] for item in thing]
+            thing2 = [item[2] for item in thing]  # Getting all emails
             if session['username'] in thing2:
-                if thing[thing2.index(session['username'])][2] == session['password']:
+                if thing[thing2.index(session['username'])][3] == session['password']:
                     cur.execute(f"""
-                    SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
+                    SELECT id,name,email,password,timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
                     FROM data
                     WHERE email='{session['username']}'
                     AND password='{session['password']}';
                     """)
                     val = cur.fetchall()
-                    arra = []
-                    try:
-                        val14 = val[4]
-                        val24 = val[5]
-                        val44 = val[6]
-                        for no, i in enumerate(val[3]):
-                            arra.append([i, val14[no], val24[no], val44[no]])
-                        content_2 = arra[0]
-                    except:
-                        content_2 = []
-                    try:
-                        arras = []
-                        val1 = val[1]
-                        val2 = val[2]
-                        for no, i in enumerate(val[0]):
-                            arra.append([i, val1[no], val2[no]])
-                        content = arras[0]
-                    except:
-                        content = []
-                    return render_template('me.html', content=content, content_2=content_2)
+                    for i in val:
+                        if i[2] == session['username']:
+                            arr = []
+                            for no,e in enumerate(i[4]):
+                                arr.append([e,i[5][no],i[6][no]])
+
+                    return render_template('me.html', content=arr)
                 else:
                     flash('Wrong details')
                     return redirect(url_for('loginsignup'))
@@ -104,69 +92,78 @@ def add():
 @app.route('/me/timing/add/process', methods=['POST', 'GET'])
 def process():
     if 'username' in session and 'password' in session:
-        cur.execute('SELECT id, email, password, timing, sensor FROM data ORDER BY id')
-        try:
-            thing = [item for item in cur.fetchall()]
-            thing2 = [item[1] for item in thing]
-            try:
-                if session['username'] in thing2:
-                    if thing[thing2.index(session['username'])][2] == session['password']:
-                        cur.execute(f"""
+        cur.execute(
+            'SELECT id,email,password,timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send FROM data ORDER BY id')
+        # try:
+        thing = [item for item in cur.fetchall()]
+        thing2 = [item[1] for item in thing]
+        # try:
+        if session['username'] in thing2:
+            if thing[thing2.index(session['username'])][2] == session['password']:
+                cur.execute(f"""
                         SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
                         FROM data
                         WHERE email='{session['username']}'
                         AND password='{session['password']}';
                         """)
-                        val = cur.fetchall()
-                        if request.method == 'POST':
-                            if val == None:
-                                cur.execute(f"""
+                val = cur.fetchall()
+                if request.method == 'POST':
+                    if val[0][0] == None:
+                        cur.execute(f"""
                                 update data 
-                                set timing_host = ARRAY[ '{request.form['host']}' ],
-                                timing_value = ARRAY[ '{request.form['value']}' ],
-                                timing_time = ARRAY[ '{request.form['time']}' ],
+                                set timing_host = ARRAY[ '{request.form['host']}' ]
                                 where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
-                            else:
-                                time_host = []
-                                time_value = []
-                                time_time = []
-                                for i in val[0]:
-                                    time_host.append(i)
-                                for i in val[1]:
-                                    time_value.append(i)
-                                for i in val[2]:
-                                    time_time.append(i)
-                                time_host.append(request.form['host'])
-                                time_value.append(request.form['value'])
-                                time_time.append(request.form['time'])
-
-                                cur.execute(f"""update data
-                                                set timing_host = ARRAY {time_host},
-                                                timing_value = ARRAY {time_host},
-                                                timing_time = ARRAY {time_host}
-                                                where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
-
-
-
-                        else:
-                            flash('You need to be logged in')
-                            return redirect(url_for('loginsignup'))
-
+                        cur.execute(f"""
+                                                                update data 
+                                                                set timing_value = ARRAY[ '{request.form['value']}' ]
+                                                                
+                                                                where email='{session['username']}';""")
+                        cur.execute(f"""
+                                                                update data 
+                                                                set 
+                                                                timing_time = ARRAY[ {int(request.form['time'])} ]
+                                                                where email='{session['username']}';""")
+                        con.commit()
+                        return redirect(url_for('me'))
                     else:
-                        flash('Wrong details')
-                        return redirect(url_for('loginsignup'))
+                        time_host = []
+                        time_value = []
+                        time_time = []
+                        for i in val[0][0]:
+                            time_host.append(i)
+                        for i in val[0][1]:
+                            time_value.append(i)
+                        for i in val[0][2]:
+                            time_time.append(i)
+                        time_host.append(request.form['host'])
+                        time_value.append(request.form['value'])
+                        time_time.append(request.form['time'])
 
-            except Exception as e:
-                con.rollback()
-                flash(f'An error occured {e}')
-                return redirect(url_for('me'))
-        except Exception as e:
-            flash(f'An error occured {e}')
-            return redirect(url_for('login'))
+                        cur.execute(f"""update data
+                                                set timing_host = ARRAY {time_host},
+                                                timing_value = ARRAY {time_value},
+                                                timing_time = ARRAY {time_time}
+                                                where email='{session['username']}';""")
+                        con.commit()
+                        return redirect(url_for('me'))
+
+
+
+                else:
+                    flash('You need to be logged in')
+                    return redirect(url_for('loginsignup'))
+
+            else:
+                flash('Wrong details')
+                return redirect(url_for('loginsignup'))
+
+    # except Exception as e:
+    #         con.rollback()
+    #         flash(f'An error occured {e}')
+    #         return redirect(url_for('me'))
+    # #except Exception as e:
+    #     flash(f'An error occured {e}')
+    #     return redirect(url_for('login'))
     else:
         flash('No users better signup')
         return redirect(url_for('signup'))
@@ -175,13 +172,23 @@ def process():
 # timing delete page
 @app.route('/me/timing/<name>')
 def remove_timing(name):
-    name = int(name)
+    name = name.split(':')
+
+
     try:
         cur.execute(f"""
-update employee 
-set timing = null, name = null, bloodgroup = null
-where employeeid=2;""")
-        con.commit()
+                                SELECT timing_host,timing_value,timing_time
+                                FROM data
+                                WHERE email='{session['username']}'
+                                AND password='{session['password']}';
+                                """)
+        val = cur.fetchall()[0]
+        return str(val)
+
+
+
+
+
     except Exception as e:
         flash(f'An error occured {e}')
     return redirect(url_for('me'))
@@ -263,7 +270,8 @@ def signup_process():
                     flash('User already exist better login in')
                     return redirect(url_for('login'))
                 else:
-                    cur.execute(f"INSERT INTO data(name,email,password) VALUES('{request.form['name']}','{request.form['username']}','{request.form['password']}')")
+                    cur.execute(
+                        f"INSERT INTO data(name,email,password) VALUES('{request.form['name']}','{request.form['username']}','{request.form['password']}')")
                     con.commit()
                     flash('Login again')
                     return redirect(url_for('login'))
