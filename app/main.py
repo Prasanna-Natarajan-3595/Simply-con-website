@@ -9,6 +9,7 @@ app.secret_key = 'aiohfoi83768403289fh;fh;df'
 
 con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"),
                        password=os.getenv("PASSWORD"), host=os.getenv("HOST"))
+
 cur = con.cursor()
 cur2 = con.cursor()
 
@@ -132,44 +133,48 @@ def process():
                     val = cur.fetchall()
                     try:
                         if request.method == 'POST':
-                            if val[0][0] == None:
-                                cur.execute(f"""
-                                update data 
-                                set timing_host = ARRAY[ '{request.form['host']}' ]
-                                where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                                update data 
-                                                                set timing_value = ARRAY[ '{request.form['value']}' ]
-                                                                
-                                                                where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                                update data 
-                                                                set 
-                                                                timing_time = ARRAY[ {int(request.form['time'])} ]
-                                                                where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
+                            if ''==request.form['host'] or ''==request.form['value'] or ''==request.form['time']:
+                                return redirect(url_for('add'))
                             else:
-                                time_host = []
-                                time_value = []
-                                time_time = []
-                                for i in val[0][0]:
-                                    time_host.append(i)
-                                for i in val[0][1]:
-                                    time_value.append(i)
-                                for i in val[0][2]:
-                                    time_time.append(i)
-                                time_host.append(request.form['host'])
-                                time_value.append(request.form['value'])
-                                time_time.append(int(request.form['time']))
+                                if val[0][0] == None:
+                                    cur.execute(f"""
+                                    update data 
+                                    set timing_host = ARRAY[ '{request.form['host']}' ]
+                                    where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                                    update data 
+                                                                    set timing_value = ARRAY[ '{request.form['value']}' ]
 
-                                cur.execute(f"""update data
-                                                set timing_host = ARRAY {time_host},
-                                                timing_value = ARRAY {time_value},
-                                                timing_time = ARRAY {time_time}
-                                                where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
+                                                                    where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                                    update data 
+                                                                    set 
+                                                                    timing_time = ARRAY[ {int(request.form['time'])} ]
+                                                                    where email='{session['username']}';""")
+                                    con.commit()
+                                    return redirect(url_for('me'))
+                                else:
+                                    time_host = []
+                                    time_value = []
+                                    time_time = []
+                                    for i in val[0][0]:
+                                        time_host.append(i)
+                                    for i in val[0][1]:
+                                        time_value.append(i)
+                                    for i in val[0][2]:
+                                        time_time.append(i)
+                                    time_host.append(request.form['host'])
+                                    time_value.append(request.form['value'])
+                                    time_time.append(int(request.form['time']))
+
+                                    cur.execute(f"""update data
+                                                    set timing_host = ARRAY {time_host},
+                                                    timing_value = ARRAY {time_value},
+                                                    timing_time = ARRAY {time_time}
+                                                    where email='{session['username']}';""")
+                                    con.commit()
+                                    return redirect(url_for('me'))
+
 
 
 
@@ -295,58 +300,62 @@ def sensor_process():
                     val = cur.fetchall()
                     try:
                         if request.method == 'POST':
-                            if val[0][0] == None:
-                                cur.execute(f"""
-                                update data 
-                                set sensor_host = ARRAY[ '{request.form['host']}' ]
-                                where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                                update data 
-                                                                set sensor_value = ARRAY[ '{request.form['value']}' ]
-
-                                                                where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                 update data 
-                                                 set sensor_host = ARRAY[ '{request.form['host']}' ]
-                                                 where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                                update data 
-                                                                set 
-                                                                sensor_alt = ARRAY[ '{request.form['alt_value']}' ]
-                                                                where email='{session['username']}';""")
-                                cur.execute(f"""
-                                                                                                update data 
-                                                                                                set 
-                                                                                                sensor_send = ARRAY[ '{request.form['send']}' ]
-                                                                                                where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
+                            if ''== request.form['host'] or ''==request.form['value'] or ''==request.form['alt_value'] or ''==request.form['send']:
+                                return redirect(url_for('sensor_add'))
                             else:
-                                sensor_host = []
-                                sensor_value = []
-                                sensor_altvalue = []
-                                sensor_send = []
-                                for i in val[0][0]:
-                                    sensor_host.append(i)
-                                for i in val[0][1]:
-                                    sensor_value.append(i)
-                                for i in val[0][2]:
-                                    sensor_altvalue.append(i)
-                                for i in val[0][3]:
-                                    sensor_altvalue.append(i)
-                                sensor_host.append(request.form['host'])
-                                sensor_value.append(request.form['value'])
-                                sensor_altvalue.append(request.form['alt_value'])
-                                sensor_send.append(request.form['send'])
+                                if val[0][0] == None:
+                                    cur.execute(f"""
+                                    update data 
+                                    set sensor_host = ARRAY[ '{request.form['host']}' ]
+                                    where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                                    update data 
+                                                                    set sensor_value = ARRAY[ '{request.form['value']}' ]
 
-                                cur.execute(f"""update data
-                                                set sensor_host = ARRAY {sensor_host},
-                                                sensor_value = ARRAY {sensor_value},
-                                                sensor_altvalue = ARRAY {sensor_altvalue},
-                                                sensor_send = ARRAY {sensor_send}
-                                                where email='{session['username']}';""")
-                                con.commit()
-                                return redirect(url_for('me'))
+                                                                    where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                     update data 
+                                                     set sensor_host = ARRAY[ '{request.form['host']}' ]
+                                                     where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                                    update data 
+                                                                    set 
+                                                                    sensor_alt = ARRAY[ '{request.form['alt_value']}' ]
+                                                                    where email='{session['username']}';""")
+                                    cur.execute(f"""
+                                                                                                    update data 
+                                                                                                    set 
+                                                                                                    sensor_send = ARRAY[ '{request.form['send']}' ]
+                                                                                                    where email='{session['username']}';""")
+                                    con.commit()
+                                    return redirect(url_for('me'))
+                                else:
+                                    sensor_host = []
+                                    sensor_value = []
+                                    sensor_altvalue = []
+                                    sensor_send = []
+                                    for i in val[0][0]:
+                                        sensor_host.append(i)
+                                    for i in val[0][1]:
+                                        sensor_value.append(i)
+                                    for i in val[0][2]:
+                                        sensor_altvalue.append(i)
+                                    for i in val[0][3]:
+                                        sensor_altvalue.append(i)
+                                    sensor_host.append(request.form['host'])
+                                    sensor_value.append(request.form['value'])
+                                    sensor_altvalue.append(request.form['alt_value'])
+                                    sensor_send.append(request.form['send'])
+
+                                    cur.execute(f"""update data
+                                                    set sensor_host = ARRAY {sensor_host},
+                                                    sensor_value = ARRAY {sensor_value},
+                                                    sensor_altvalue = ARRAY {sensor_altvalue},
+                                                    sensor_send = ARRAY {sensor_send}
+                                                    where email='{session['username']}';""")
+                                    con.commit()
+                                    return redirect(url_for('me'))
+
 
 
 
@@ -457,11 +466,15 @@ def signup_process():
                     flash('User already exist better login in')
                     return redirect(url_for('login'))
                 else:
-                    cur.execute(
-                        f"INSERT INTO data(name,email,password) VALUES('{request.form['name']}','{request.form['username']}','{request.form['password']}')")
-                    con.commit()
-                    flash('Login again')
-                    return redirect(url_for('login'))
+                    if '' == request.form['name'] or '' == request.form['username'] or '' == request.form['password']:
+                        flash('Fill the form fully')
+                        return redirect(url_for('signup'))
+                    else:
+                        cur.execute(
+                            f"INSERT INTO data(name,email,password) VALUES('{request.form['name']}','{request.form['username']}','{request.form['password']}')")
+                        con.commit()
+                        flash('Login again')
+                        return redirect(url_for('login'))
             except Exception as e:
                 flash(f'Got an error try again {e}')
                 con.rollback()
@@ -482,25 +495,27 @@ def profile():
                                 WHERE email='{session['username']}'
                                 AND password='{session['password']}';""")
     v = cur.fetchall()
-    return render_template('profile.html',name=v[0][0],email=session['username'],password=session['password'])
+    return render_template('profile.html', name=v[0][0], email=session['username'], password=session['password'])
 
 
 # Profile page saver
-@app.route('/me/profile/save', methods=['POST','GET'])
+@app.route('/me/profile/save', methods=['POST', 'GET'])
 def profile_save():
     if request.method == 'POST':
         if 'username' in session and 'password' in session:
-            cur.execute(f"""
+            if '' == request.form['password'] or '' == request.form['name']:
+                return redirect(url_for('profile'))
+            else:
+                cur.execute(f"""
                            update data 
                            set name = '{request.form['name']}'
                            where email='{session['username']}';""")
-            cur.execute(f"""
+                cur.execute(f"""
                                                         update data 
                                                         set password = '{request.form['password']}'
                                                         where email='{session['username']}';""")
-            con.commit()
-
-            return redirect(url_for('me'))
+                con.commit()
+                return redirect(url_for('me'))
         else:
             flash('First you need to be logged in ')
             return redirect(url_for('login'))
