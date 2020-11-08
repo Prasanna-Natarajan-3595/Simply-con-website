@@ -82,7 +82,7 @@
 {% for i in content %}
     {% if i is not none %}
     <div style="padding-left: 10px;">
-      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}}</h4><form action="/me/timing/{{i[0]}}">
+      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}} : {{i[4]}}</h4><form action="/me/timing/{{i[0]}}">
         <input type="submit" class="btn btn-outline-danger" style="float: right;" value="Delete">
     </form>
       <br>
@@ -117,7 +117,7 @@
         {% if i is defined %}
 
     <div style="padding-left: 10px;">
-      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}} : {{i[4]}}</h4><form action="/me/sensor/{{i[0]}}">
+      <h4 style="font-family: 'Segoe UI'; size: 14; padding-left: 10px;">{{i[0]}} : {{i[1]}} : {{i[2]}} : {{i[3]}} : {{i[4]}} : {{i[5]}}</h4><form action="/me/sensor/{{i[0]}}">
         <input type="submit" class="btn btn-outline-danger" style="float: right;" value="Delete">
     </form>
       <br>
