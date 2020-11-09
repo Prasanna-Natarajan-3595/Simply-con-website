@@ -1,15 +1,14 @@
 # To run FLASK_APP=web_app/main.py flask run
 from flask import Flask, render_template, session, request, redirect, url_for, flash
 import psycopg2
-
-
+import os
 # Initializing all
 app = Flask(__name__)
 app.secret_key = 'aiohfoi83768403289fh;fh;df'
 
-# con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"),
-# password=os.getenv("PASSWORD"), host=os.getenv("HOST"))
-con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
+con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"), password=os.getenv("PASSWORD"),
+                       host=os.getenv("HOST"))
+# con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
 cur = con.cursor()
 cur2 = con.cursor()
 
@@ -121,93 +120,82 @@ def process():
 
         thing = [item for item in cur.fetchall()]
         thing2 = [item[1] for item in thing]
-        # try:
-        if session['username'] in thing2:
-            if thing[thing2.index(session['username'])][2] == session['password']:
-                cur.execute(f"""
+        try:
+            if session['username'] in thing2:
+                if thing[thing2.index(session['username'])][2] == session['password']:
+                    cur.execute(f"""
                         SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
                         FROM data
                         WHERE email='{session['username']}'
                         AND password='{session['password']}';
                         """)
-                val = cur.fetchall()
-                # try:
-                if request.method == 'POST':
-                    if 0 == len(request.form['host']) or 0 == len(request.form['value']) or 0 == len(
-                            request.form['time']):
-                        return redirect(url_for('add'))
-                    else:
-                        if val[0][0] == None:
-                            cur.execute(f"""
+                    val = cur.fetchall()
+                    try:
+                        if request.method == 'POST':
+                            if 0 == len(request.form['host']) or 0 == len(request.form['value']) or 0 == len(request.form['time']):
+                                return redirect(url_for('add'))
+                            else:
+                                if val[0][0] == None:
+                                    cur.execute(f"""
                                     update data 
                                     set timing_host = ARRAY[ '{request.form['host']}' ]
                                     where email='{session['username']}';""")
-                            cur.execute(f"""
+                                    cur.execute(f"""
                                                                     update data 
                                                                     set timing_value = ARRAY[ '{request.form['value']}' ]
 
                                                                     where email='{session['username']}';""")
-                            cur.execute(f"""
+                                    cur.execute(f"""
                                                                     update data 
                                                                     set 
                                                                     timing_time = ARRAY[ {int(request.form['time'])} ]
                                                                     where email='{session['username']}';""")
-                            cur.execute(f"""
+                                    cur.execute(f"""
                                                                 update data 
                                                                 set 
                                                                 hostname = ARRAY[ '{request.form['hostname']}' ]
                                                                 where email='{session['username']}';""")
-                            con.commit()
-                            return redirect(url_for('me'))
-                        else:
-                            time_host = []
-                            time_value = []
-                            time_time = []
-                            time_host_name = []
-                            for i in val[0][0]:
-                                time_host.append(i)
-                            for i in val[0][1]:
-                                time_value.append(i)
-                            for i in val[0][2]:
-                                time_time.append(i)
-                            for i in val[0][3]:
-                                time_host_name.append(i)
-                            time_host.append(request.form['host'])
-                            time_value.append(request.form['value'])
-                            time_time.append(int(request.form['time']))
-                            time_host_name.append(request.form['hostname'])
-                            cur.execute(f"""update data
+                                    con.commit()
+                                    return redirect(url_for('me'))
+                                else:
+                                    time_host = []
+                                    time_value = []
+                                    time_time = []
+                                    time_host_name = []
+                                    for i in val[0][0]:
+                                        time_host.append(i)
+                                    for i in val[0][1]:
+                                        time_value.append(i)
+                                    for i in val[0][2]:
+                                        time_time.append(i)
+                                    for i in val[0][3]:
+                                        time_host_name.append(i)
+                                    time_host.append(request.form['host'])
+                                    time_value.append(request.form['value'])
+                                    time_time.append(int(request.form['time']))
+                                    time_host_name.append(request.form['hostname'])
+                                    cur.execute(f"""update data
                                                     set timing_host = ARRAY {time_host},
                                                     timing_value = ARRAY {time_value},
                                                     timing_time = ARRAY {time_time},
                                                     hostname = ARRAY {time_host_name}
                                                     where email='{session['username']}';""")
-                            con.commit()
-                            return redirect(url_for('me'))
+                                    con.commit()
+                                    return redirect(url_for('me'))
+                        else:
+                            flash('You need to be logged in')
+                            return redirect(url_for('loginsignup'))
+                    except Exception as e:
 
-
-
-
-                else:
-                    flash('You need to be logged in')
-                    return redirect(url_for('loginsignup'))
-        # except Exception as e:
-        #  con.rollback()
-        # flash(f'An error occured {e}')
-        # return redirect(url_for('me'))
-
-        else:
-            flash('Wrong details')
-            return redirect(url_for('loginsignup'))
-
-# except Exception as e:
-#    con.rollback()
-#   flash(f'An error occured {e}')
-#    return redirect(url_for('me'))
-#
-# else:
-# flash('No users better signup')
-# return redirect(url_for('signup'))
+                        flash(f'An error occured {e}')
+                        return redirect(url_for('me'))
+        except Exception as e:
+             con.rollback()
+             flash(f'An error occured {e}')
+             return redirect(url_for('me'))
+    else:
+        flash('You need to be logged in')
+        return redirect(url_for('loginsignup'))
 
 
 # timing delete page
