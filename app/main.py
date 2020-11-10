@@ -6,9 +6,9 @@ import os
 app = Flask(__name__)
 app.secret_key = 'aiohfoi83768403289fh;fh;df'
 
-con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"), password=os.getenv("PASSWORD"),
-                       host=os.getenv("HOST"))
-# con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
+#con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"), password=os.getenv("PASSWORD"),
+  #                     host=os.getenv("HOST"))
+con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
 cur = con.cursor()
 cur2 = con.cursor()
 
@@ -124,7 +124,7 @@ def process():
             if session['username'] in thing2:
                 if thing[thing2.index(session['username'])][2] == session['password']:
                     cur.execute(f"""
-                        SELECT timing_host,timing_value,timing_time,sensor_host,sensor_value,sensor_alt,sensor_send
+                        SELECT timing_host,timing_value,timing_time,hostname,sensor_value,sensor_alt,sensor_send
                         FROM data
                         WHERE email='{session['username']}'
                         AND password='{session['password']}';
@@ -350,7 +350,7 @@ def sensor_process():
                                     for i in val[0][2]:
                                         sensor_altvalue.append(i)
                                     for i in val[0][3]:
-                                        sensor_altvalue.append(i)
+                                        sensor_send.append(i)
                                     for i in val[0][4]:
                                         name_send.append(i)
                                     sensor_host.append(request.form['host'])
@@ -362,7 +362,7 @@ def sensor_process():
                                     cur.execute(f"""update data
                                                     set sensor_host = ARRAY {sensor_host},
                                                     sensor_value = ARRAY {sensor_value},
-                                                    sensor_altvalue = ARRAY {sensor_altvalue},
+                                                    sensor_alt = ARRAY {sensor_altvalue},
                                                     sensor_send = ARRAY {sensor_send},
                                                     name_send = ARRAY {name_send}
                                                     where email='{session['username']}';""")
