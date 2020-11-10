@@ -6,9 +6,9 @@ import os
 app = Flask(__name__)
 app.secret_key = 'aiohfoi83768403289fh;fh;df'
 
-#con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"), password=os.getenv("PASSWORD"),
-  #                     host=os.getenv("HOST"))
-con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
+con = psycopg2.connect(database=os.getenv("DB"), user=os.getenv("USER"), password=os.getenv("PASSWORD"),
+                       host=os.getenv("HOST"))
+#con = psycopg2.connect(user='postgres', password='2005', database='simplycon')
 cur = con.cursor()
 cur2 = con.cursor()
 
