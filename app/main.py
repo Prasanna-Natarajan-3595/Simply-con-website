@@ -364,7 +364,7 @@ def sensor_process():
                                                     sensor_value = ARRAY {sensor_value},
                                                     sensor_alt = ARRAY {sensor_altvalue},
                                                     sensor_send = ARRAY {sensor_send},
-                                                    name_send = ARRAY {name_send}
+                                                    hostname_sensor = ARRAY {name_send}
                                                     where email='{session['username']}';""")
                                     con.commit()
                                     return redirect(url_for('me'))
