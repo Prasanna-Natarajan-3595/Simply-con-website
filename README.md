@@ -11,13 +11,13 @@ Simply con is a sever automation system useful for Industrial automation, comput
 
 # Links 
 
-[link for website](https://simplyconus.herokuapp.com/)
+* [link for website](https://simplyconus.herokuapp.com/)
 
-[tutorials](https://www.youtube.com/channel/UCyqfcVuppv6s70qNHKQQ2xA)
+* [tutorials](https://www.youtube.com/channel/UCyqfcVuppv6s70qNHKQQ2xA)
 
-[sensor server](https://github.com/Prasanna-Natarajan-3595/Simply-con-server-sensor)
+* [sensor server](https://github.com/Prasanna-Natarajan-3595/Simply-con-server-sensor)
 
-[time server](https://github.com/Prasanna-Natarajan-3595/Simply-con-server-time)
+* [time server](https://github.com/Prasanna-Natarajan-3595/Simply-con-server-time)
 
 
 
