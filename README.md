@@ -8,7 +8,8 @@ Simply con is a sever automation system useful for Industrial automation, comput
 * Sensor server will send data based on input received
 * Time server will send data based on time
 * More things will be added if the idea comes...
-#Links 
+
+# Links 
 
 [link for website](https://simplyconus.herokuapp.com/)
 
